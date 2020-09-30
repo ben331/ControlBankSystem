@@ -1,11 +1,11 @@
 package datastructures;
 
-public class NodoCola<T> {
+public class NodeQueue<T> {
 
 	private T element;
-	private NodoCola<T> next;
+	private NodeQueue<T> back;
 	
-	public NodoCola(T element) {
+	public NodeQueue(T element) {
 		this.element = element;
 	}
 	
@@ -17,12 +17,12 @@ public class NodoCola<T> {
 		this.element = element;
 	}
 
-	public NodoCola<T> getNext() {
-		return next;
+	public NodeQueue<T> getBack() {
+		return back;
 	}
 
-	public void setNext(NodoCola<T> next) {
-		this.next = next;
+	public void setBack(NodeQueue<T> back) {
+		this.back = back;
 	}
 
 	

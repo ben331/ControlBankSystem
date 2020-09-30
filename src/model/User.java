@@ -11,6 +11,12 @@ public class User implements Comparable<User>{
 		this.CC = CC;
 		this.priority = priority;
 	}
+	
+	public User(String name, String CC) {
+		super();
+		this.name = name;
+		this.CC = CC;
+	}
 
 	public String getName() {
 		return name;

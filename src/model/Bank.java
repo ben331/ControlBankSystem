@@ -25,8 +25,8 @@ public class Bank {
 	public Bank() {
 		generalQueue = new Queue<>();
 		priorityQueue = new Heap<>(20);
-		clients = new HashTable<>();
-		clients = new HashTable<>();
+		clients = new HashTable<>(1009);
+		deserters = new HashTable<>(499);
 		record = new Stack<>();
 	}
 	
@@ -39,13 +39,13 @@ public class Bank {
 		}
 	}
 	
-	public void attendUser(boolean attendGeneral) {
+	public void attendUser(boolean attendGeneral) throws Exception {
 		User user;
 		if(attendGeneral) {
 			if(generalQueue.isEmpty()) {
 				throw new Exception("General queue is empty");
 			}else {
-				user = generalQueue.denqueue();
+				user = generalQueue.dequeue();
 			}
 		}else {
 			if(priorityQueue.isEmpty()) {
@@ -63,7 +63,7 @@ public class Bank {
 	}
 	
 	public Client searchClient(String CC) {
-		
+		return null;
 	}
 	
 	public void cancelAccountOfClient(String CC) {
