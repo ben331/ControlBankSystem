@@ -5,10 +5,10 @@
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="205.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="221.0" prefWidth="202.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label layoutX="34.0" layoutY="14.0" prefHeight="24.0" prefWidth="152.0" text="Why is the matter a priority?" />
-      <Button fx:id="btReady" layoutX="54.0" layoutY="165.0" mnemonicParsing="false" onAction="#ready" text="Ready" />
+      <Label layoutX="34.0" prefHeight="48.0" prefWidth="152.0" text="Why is the matter a priority?" wrapText="true" />
+      <Button fx:id="btReady" layoutX="71.0" layoutY="164.0" mnemonicParsing="false" onAction="#ready" text="Ready" />
       <RadioButton fx:id="rbDisabled" layoutX="34.0" layoutY="52.0" mnemonicParsing="false" text="disabled" />
       <RadioButton fx:id="rbPregnancy" layoutX="35.0" layoutY="78.0" mnemonicParsing="false" text="pregnancy" />
       <RadioButton fx:id="rbSeniorAdult" layoutX="35.0" layoutY="102.0" mnemonicParsing="false" text="senior adult" />

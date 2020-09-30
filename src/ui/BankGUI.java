@@ -13,7 +13,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
@@ -205,7 +204,7 @@ public class BankGUI {
     private TableColumn<?, ?> tableColumnTime;
 
     @FXML
-    private TableColumn<?, ?> tableColumnMoney;
+    private TableColumn<?, ?> tableColumnBalance;
 
     @FXML
     private RadioButton rbClientName;
@@ -220,7 +219,7 @@ public class BankGUI {
     private RadioButton rbTime;
 
     @FXML
-    private RadioButton rbMoney;
+    private RadioButton rbBalance;
 
     @FXML
     private Button buttomReady;

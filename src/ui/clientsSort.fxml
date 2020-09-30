@@ -7,25 +7,24 @@
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="740.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="740.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <TableView fx:id="table" layoutX="14.0" layoutY="63.0" prefHeight="471.0" prefWidth="578.0">
         <columns>
           <TableColumn fx:id="tableColumnName" prefWidth="144.79995155334473" text="NAME" />
             <TableColumn fx:id="tableColumnCC" prefWidth="144.79995155334473" text="CC" />
             <TableColumn fx:id="tableColumnTime" prefWidth="144.79995155334473" text="TIME" />
-            <TableColumn fx:id="tableColumnMoney" prefWidth="144.79995155334473" text="MONEY" />
+            <TableColumn fx:id="tableColumnBalance" prefWidth="144.79995155334473" text="BALANCE" />
         </columns>
       </TableView>
-      <RadioButton fx:id="rbClientName" layoutX="613.0" layoutY="124.0" mnemonicParsing="false" text="client name">
+      <RadioButton fx:id="rbClientName" layoutX="613.0" layoutY="124.0" mnemonicParsing="false" selected="true" text="client name">
          <toggleGroup>
             <ToggleGroup fx:id="sortBy" />
          </toggleGroup>
       </RadioButton>
       <RadioButton fx:id="rbCC" layoutX="613.0" layoutY="153.0" mnemonicParsing="false" text="CC" toggleGroup="$sortBy" />
       <RadioButton fx:id="rbTime" layoutX="613.0" layoutY="183.0" mnemonicParsing="false" text="Time" toggleGroup="$sortBy" />
-      <RadioButton fx:id="rbMoney" layoutX="613.0" layoutY="211.0" mnemonicParsing="false" text="Money" toggleGroup="$sortBy" />
+      <RadioButton fx:id="rbBalance" layoutX="613.0" layoutY="211.0" mnemonicParsing="false" text="Balance" toggleGroup="$sortBy" />
       <Button fx:id="buttomReady" layoutX="637.0" layoutY="249.0" mnemonicParsing="false" onAction="#readySort" text="Ready" />
    </children>
 </AnchorPane>

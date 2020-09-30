@@ -9,8 +9,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="608.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="608.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <center>
       <AnchorPane prefHeight="492.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
@@ -41,8 +40,8 @@
                   <Font name="System Bold Italic" size="14.0" />
                </font>
             </Label>
-            <Button fx:id="btAddGeneralRow" layoutX="49.0" layoutY="531.0" mnemonicParsing="false" onAction="#addGeneralRow" prefHeight="26.0" prefWidth="120.0" style="-fx-border-style: red;" text="add to General row" textAlignment="CENTER" />
-            <Button fx:id="btAddPriorityRow" layoutX="437.0" layoutY="531.0" mnemonicParsing="false" onAction="#addPriorityRow" prefHeight="26.0" prefWidth="120.0" style="-fx-border-style: red;" text="add to priority row" textAlignment="CENTER" />
+            <Button fx:id="btAddGeneralRow" layoutX="50.0" layoutY="516.0" mnemonicParsing="false" onAction="#addGeneralRow" prefHeight="59.0" prefWidth="114.0" style="-fx-border-style: red;" text="add to General row" textAlignment="CENTER" wrapText="true" />
+            <Button fx:id="btAddPriorityRow" layoutX="458.0" layoutY="519.0" mnemonicParsing="false" onAction="#addPriorityRow" prefHeight="67.0" prefWidth="106.0" style="-fx-border-style: red;" text="add to priority row" textAlignment="CENTER" wrapText="true" />
          </children>
       </AnchorPane>
    </center>
