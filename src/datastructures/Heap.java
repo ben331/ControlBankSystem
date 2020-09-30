@@ -70,10 +70,10 @@ public class Heap<K extends Comparable<K>, V> implements IHeap<K,V>{
 	}
 
 	@Override
-	public void insert(Tuple<K, V> element) throws IndexOutOfBoundsException{
+	public void insert(K key, V value) throws IndexOutOfBoundsException{
 		if(array.length!=size) {
 			size++;
-			increaseKey(size, element);
+			increaseKey(size, new Tuple<K,V>(key, value));
 		}else {
 			throw new IndexOutOfBoundsException("Heap is full");
 		}

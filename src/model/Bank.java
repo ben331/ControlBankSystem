@@ -31,11 +31,31 @@ public class Bank {
 	}
 	
 	public void registerIncome(String name, String CC, Priority priority) {
-		
+		User user = new User(name, CC, priority);
+		if(priority==null) {
+			generalQueue.enqueue(user);
+		}else {
+			priorityQueue.insert(priority, user);
+		}
 	}
 	
 	public void attendUser(boolean attendGeneral) {
-		
+		User user;
+		if(attendGeneral) {
+			if(generalQueue.isEmpty()) {
+				throw new Exception("General queue is empty");
+			}else {
+				user = generalQueue.denqueue();
+			}
+		}else {
+			if(priorityQueue.isEmpty()) {
+				throw new Exception("General queue is empty");
+			}else {
+				user = priorityQueue.extractMax();
+			}
+		}
+		Client client = searchClient(user.getCC());
+		user = client!=null? client: user;
 	}
 	
 	public void registerClient() {

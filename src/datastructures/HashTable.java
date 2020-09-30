@@ -32,7 +32,8 @@ public class HashTable<K extends Comparable<K>,V> implements IHashTable<K,V>{
 	}
 
 	@Override
-	public void put(Tuple<K,V> tuple) {
+	public void put(K key, V value) {
+		Tuple<K,V> tuple = new Tuple<K,V>(key, value);
 		int hash = hash(tuple.getKey(), 0);
 		if(hash!=-1) {
 			table[hash]=tuple;

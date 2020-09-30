@@ -5,10 +5,11 @@ public class User implements Comparable<User>{
 	private String CC;
 	private Priority priority;
 	
-	public User(String name, String cC) {
+	public User(String name, String CC, Priority priority) {
 		super();
 		this.name = name;
-		CC = cC;
+		this.CC = CC;
+		this.priority = priority;
 	}
 
 	public String getName() {
