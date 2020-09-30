@@ -60,13 +60,29 @@ public class Bank {
 	
 	public void registerClient() {
 		
+		Client helperAdd = new Client(currentUser.getName(), currentUser.getCC());
+		clients.put(currentUser.getCC(), helperAdd);
+		
 	}
 	
 	public Client searchClient(String CC) {
-		return null;
+		
+		Client clientReturn = clients.get(CC);
+		
+		if(clientReturn == null) {
+			return null;
+		}else {
+			return clientReturn;
+		}
+		
+		
 	}
 	
 	public void cancelAccountOfClient(String CC) {
+		
+		Client clientCancelAccount = clients.get(CC);
+		clients.delete(CC);
+		deserters.put(CC, clientCancelAccount);
 		
 	}
 	
