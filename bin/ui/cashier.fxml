@@ -9,10 +9,10 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="460.0" prefWidth="626.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <left>
       <VBox prefHeight="400.0" prefWidth="114.0" BorderPane.alignment="CENTER">
          <children>
@@ -60,8 +60,9 @@
                   </VBox>
                </children>
             </HBox>
-            <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="5.0">
+            <VBox alignment="TOP_CENTER" prefHeight="207.0" prefWidth="519.0" spacing="5.0">
                <children>
+                  <Line endX="350.29290771484375" endY="-1.4497476816177368" startX="-100.0" />
                   <Label alignment="CENTER" prefHeight="35.0" prefWidth="217.0" text="Operations">
                      <font>
                         <Font size="20.0" />
@@ -112,8 +113,7 @@
                   <Font size="23.0" />
                </font>
             </Label>
-            <Button mnemonicParsing="false" onAction="#undo" prefHeight="35.0" prefWidth="38.0" />
-            <Button mnemonicParsing="false" onAction="#redo" prefHeight="34.0" prefWidth="37.0" />
+            <Button mnemonicParsing="false" onAction="#undo" prefHeight="35.0" prefWidth="111.0" text="UNDO" />
          </children>
          <padding>
             <Insets left="10.0" right="10.0" />

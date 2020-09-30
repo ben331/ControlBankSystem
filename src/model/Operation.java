@@ -1,5 +1,7 @@
 package model;
 
+import java.time.LocalDate;
+
 public class Operation {
 	
 	public static final char CONSING = 'G';
@@ -11,12 +13,27 @@ public class Operation {
 	private String CC;
 	private double value;
 	private boolean cash;
+	private LocalDate paymentCreditCard;
 	
-	public Operation(char type, String cC, double value, boolean cash) {
+	public Operation(char type, String CC, boolean cash, LocalDate p) {
 		super();
 		this.type = type;
-		CC = cC;
+		this.CC = CC;
+		this.cash = cash;
+		paymentCreditCard = p;
+	}
+	
+	public Operation(char type, String CC, double value) {
+		super();
+		this.type = type;
+		this.CC = CC;
 		this.value = value;
+	}
+	
+	public Operation(char type, String CC) {
+		super();
+		this.type = type;
+		this.CC = CC;
 	}
 	
 	public char getType() {
@@ -29,7 +46,11 @@ public class Operation {
 		return value;
 	}
 
-	public boolean isCash() {
+	public boolean byCash() {
 		return cash;
+	}
+
+	public LocalDate getPaymentCreditCard() {
+		return paymentCreditCard;
 	}
 }

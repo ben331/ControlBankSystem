@@ -15,6 +15,14 @@ public class CreditCard {
 		value = Math.random()*5000000;
 	}
 	
+	public void setValue(double value) {
+		this.value = value;
+	}
+
+	public void setLastPaymentDate(LocalDate lastPaymentDate) {
+		this.lastPaymentDate = lastPaymentDate;
+	}
+
 	public void pay() {
 		value=0;
 		lastPaymentDate=LocalDate.now();

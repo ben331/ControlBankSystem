@@ -1,7 +1,13 @@
 package datastructures;
 
-public class NodeStack<T> {
+import java.io.Serializable;
 
+public class NodeStack<T> implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8077844194947967092L;
 	private NodeStack<T> down;
 	private T element;
 

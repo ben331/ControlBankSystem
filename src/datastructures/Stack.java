@@ -1,8 +1,13 @@
 package datastructures;
 
+import java.io.Serializable;
 
-public class Stack<T> implements IStack<T> {
+public class Stack<T> implements IStack<T>, Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6612677588302009941L;
 	private NodeStack<T>  top;
 
 	public Stack () {}

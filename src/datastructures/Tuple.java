@@ -1,7 +1,13 @@
 package datastructures;
 
-public class Tuple<K extends Comparable<K>,V> {
+import java.io.Serializable;
+
+public class Tuple<K extends Comparable<K>,V> implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1441522304459643339L;
 	private K key;
 	private V value;
 	
@@ -18,5 +24,6 @@ public class Tuple<K extends Comparable<K>,V> {
 	
 	public void setDelete() {
 		key = null;
+		value = null;
 	}
 }

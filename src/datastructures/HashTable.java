@@ -1,9 +1,16 @@
 package datastructures;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+
 import customexception.FullStructureException;
 
-public class HashTable<K extends Comparable<K>,V> implements IHashTable<K,V>{
+public class HashTable<K extends Comparable<K>,V> implements IHashTable<K,V>, Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 57815965684572420L;
 	private Tuple<? extends Comparable<?>,?>[] table;
 	private int m;
 	private int size;
@@ -120,17 +127,16 @@ public class HashTable<K extends Comparable<K>,V> implements IHashTable<K,V>{
 	}
 	
 	@SuppressWarnings( "unchecked" )
-	public Tuple<? extends Comparable<?>,?>[] toArray(){
-		Tuple<? extends Comparable<?>, ?>[] array = new Tuple<?, ?>[size];
+	public ArrayList<Tuple<? extends Comparable<?>,?>> toList(){
+		ArrayList<Tuple<? extends Comparable<?>, ?>> list = new ArrayList<>();
 		Tuple<K,V> current;
-		int j=0;
+
 		for(int i = 0; i<m; i++) {
 			current = (Tuple<K, V>) table[i];
 			if(current !=null && current.getKey()!=null) {
-				array[j]=current;
-				j++;
+				list.add(current);
 			}
 		}
-		return array;
+		return list;
 	}
 }

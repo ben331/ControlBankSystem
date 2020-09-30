@@ -2,6 +2,8 @@ package model;
 
 import java.time.LocalDate;
 
+import customexception.InsufficientBalanceException;
+
 public class Client extends User{
 	
 	private LocalDate incorporationDate;
@@ -27,15 +29,15 @@ public class Client extends User{
 		return account;
 	}
 
-	public void payCreditCard(boolean withCash) throws Exception {
+	public void payCreditCard(boolean inCash) throws InsufficientBalanceException {
 		if(creditCard.getValue()==0) {
-			throw new Exception("Credit card value is 0");
+			throw new NumberFormatException("Credit card value is 0");
 		}else{
-			if(withCash) {
+			if(inCash) {
 				creditCard.pay();
 			}else {
 				if(account.getBalance() < creditCard.getValue()) {
-					throw new Exception("Balance in account is not enough to pay credit card");
+					throw new InsufficientBalanceException(account.getBalance(), creditCard.getValue());
 				}else {
 					account.withDraw(creditCard.getValue());
 					creditCard.pay();
