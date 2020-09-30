@@ -2,9 +2,8 @@ package datastructures;
 
 public class NodoStack<T> {
 
-	NodoStack<T> elemDown;
-	NodoStack<T> elemCurrent;
-	T element;
+	private NodoStack<T> elemDown;
+	private T element;
 
 	public NodoStack(T element) {
 		this.element = element;

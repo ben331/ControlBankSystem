@@ -6,8 +6,8 @@ package datastructures;
 
 public class StackControler<T> {
 
-	NodoStack<T>  last;
-	
+	private NodoStack<T>  last;
+
 	public StackControler () {
 		last = new NodoStack<T>(null);
 	}
@@ -37,6 +37,7 @@ public class StackControler<T> {
 		}
 		
 	}
+	
 	public T peek() {
 		
 		return last.getElement();
@@ -48,6 +49,14 @@ public class StackControler<T> {
 		last= last.getElemDown();
 		return temp;
 		
+	}
+	
+	public NodoStack<T> getLast() {
+		return last;
+	}
+
+	public void setLast(NodoStack<T> last) {
+		this.last = last;
 	}
 	
 }
