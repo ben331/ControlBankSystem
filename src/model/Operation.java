@@ -10,8 +10,9 @@ public class Operation {
 	private char type;
 	private String CC;
 	private double value;
+	private boolean cash;
 	
-	public Operation(char type, String cC, double value) {
+	public Operation(char type, String cC, double value, boolean cash) {
 		super();
 		this.type = type;
 		CC = cC;
@@ -26,5 +27,9 @@ public class Operation {
 	}
 	public double getValue() {
 		return value;
+	}
+
+	public boolean isCash() {
+		return cash;
 	}
 }

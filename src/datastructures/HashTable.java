@@ -1,28 +1,63 @@
 package datastructures;
 
+import customexception.FullStructureException;
+
 public class HashTable<K extends Comparable<K>,V> implements IHashTable<K,V>{
 	
 	private Tuple<? extends Comparable<?>,?>[] table;
 	private int m;
-	
+	private int size;
 	
 	public HashTable(int m) {
 		this.m = m;
 		table = new Tuple<?,?>[m];
 	}
 	
+	public int getSize() {
+		return size;
+	}
+	
+	public boolean isEmpty() {
+		return size==0;
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
-	public int hash(K key, int explorator) {
+	public int hashToSearch(K key, int explorator) {
+		
 		int hash = auxHash(key);
-		Tuple<K,V> current = (Tuple<K, V>) table[hash + explorator];
-		while((current!=null && current.getKey().compareTo(key)!=0) && explorator<m) {
+		Tuple<K,V> current = (Tuple<K, V>) table[hash];
+		
+		//Search a space with the key searched until find it or find a null space.
+		while(current!=null  && ((current.getKey()==null || current.getKey().compareTo(key)!=0) && explorator<m-1)) {
 			explorator++;
+			current = (Tuple<K, V>) table[(hash + explorator)%m];
 		}
-		if(explorator<m) {
+		
+		if((current!=null && explorator<m-1) && current.getKey()!=null) {
 			return hash + explorator;
 		}else {
 			return -1;
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public int hashToInsert(K key, int explorator) throws FullStructureException {
+		
+		int hash = auxHash(key);
+		Tuple<K,V> current = (Tuple<K, V>) table[hash];
+		
+		//Search a null space or a deleted space (key == null)
+		while((current!=null  && current.getKey()!=null) && explorator < m-1) {
+			explorator++;
+			current = (Tuple<K, V>) table[(hash + explorator)%m];
+		}
+		
+		//If was founded
+		if(explorator < m-1) {
+			return hash + explorator;
+		}else {
+			throw new FullStructureException(size);
 		}
 	}
 	
@@ -32,19 +67,20 @@ public class HashTable<K extends Comparable<K>,V> implements IHashTable<K,V>{
 	}
 
 	@Override
-	public void put(K key, V value) {
+	public void put(K key, V value) throws FullStructureException {
 		Tuple<K,V> tuple = new Tuple<K,V>(key, value);
-		int hash = hash(tuple.getKey(), 0);
-		if(hash!=-1) {
-			table[hash]=tuple;
-		}
+		int hash = hashToInsert(tuple.getKey(), 0);
+		table[hash]=tuple;
+		size++;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public V get(K key) {
-		int hash=hash(key,0);
-		if(hash!=-1 && table[hash]!=null) {
+		
+		int hash=hashToSearch(key,0);
+		
+		if(hash!=-1) {
 			return (V) table[hash].getValue();
 		}else {
 			return null;
@@ -68,5 +104,33 @@ public class HashTable<K extends Comparable<K>,V> implements IHashTable<K,V>{
 			}
 		}
 		return integer;
+	}
+
+	@Override
+	public boolean delete(K key) {
+		int hash = hashToSearch(key,0);
+		if(hash!=-1) {
+			table[hash].setDelete(); //Set key null
+			size--;
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
+	@SuppressWarnings( "unchecked" )
+	public Tuple<? extends Comparable<?>,?>[] toArray(){
+		Tuple<? extends Comparable<?>, ?>[] array = new Tuple<?, ?>[size];
+		Tuple<K,V> current;
+		int j=0;
+		for(int i = 0; i<m; i++) {
+			current = (Tuple<K, V>) table[i];
+			if(current !=null && current.getKey()!=null) {
+				array[j]=current;
+				j++;
+			}
+		}
+		return array;
 	}
 }

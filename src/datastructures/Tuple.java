@@ -15,4 +15,8 @@ public class Tuple<K extends Comparable<K>,V> {
 	public V getValue() {
 		return value;
 	}
+	
+	public void setDelete() {
+		key = null;
+	}
 }
