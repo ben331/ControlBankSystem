@@ -28,6 +28,10 @@ public class Client extends User{
 	public SavingsAccount getAccount() {
 		return account;
 	}
+	
+	public double getBalance() {
+		return account.getBalance();
+	}
 
 	public void payCreditCard(boolean inCash) throws InsufficientBalanceException {
 		if(creditCard.getValue()==0) {

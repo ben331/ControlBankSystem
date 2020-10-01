@@ -1,9 +1,15 @@
 package ui;
 
 import model.Bank;
+import model.Client;
+import model.Priority;
+import model.User;
 
 import java.io.IOException;
+import java.time.LocalDate;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,6 +21,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 
 public class BankGUI {
@@ -26,12 +33,45 @@ public class BankGUI {
 		this.bank = bank;
 	}
 	
+	///////////////////////////////////////////////////// BANK /////////////////////////////////////////////////
+
+	
 	@FXML
 	private BorderPane mainPane;
 	
 	public BorderPane getMainPane() {
 		return mainPane;
 	}
+	
+	@FXML
+    void showCashier(ActionEvent event) throws IOException {
+    	FXMLLoader loader = new FXMLLoader(getClass().getResource("cashier.fxml"));
+    	loader.setController(this);
+    	Parent scene = loader.load();
+    	mainPane.setCenter(scene);
+    }
+
+    @FXML
+    void showDataBase(ActionEvent event) throws IOException {
+    	FXMLLoader loader = new FXMLLoader(getClass().getResource("clientsSort.fxml"));
+    	loader.setController(this);
+    	Parent scene = loader.load();
+    	mainPane.setCenter(scene);
+    	initializeTable();
+    }
+
+    @FXML
+    void showQueues(ActionEvent event) throws IOException {
+    	FXMLLoader loader = new FXMLLoader(getClass().getResource("queue.fxml"));
+    	loader.setController(this);
+    	Parent scene = loader.load();
+    	mainPane.setCenter(scene);
+    	initializeGeneralQueue();
+    	initializePriorityQueue();
+    }
+	
+	///////////////////////////////////////////////////// Cashier /////////////////////////////////////////////////
+
 	
     @FXML
     private TextField txtCCToSearch;
@@ -65,32 +105,15 @@ public class BankGUI {
 
     @FXML
     private RadioButton byAccount;
-
-    @FXML
-    void showCashier(ActionEvent event) throws IOException {
-    	FXMLLoader loader = new FXMLLoader(getClass().getResource("cashier.fxml"));
-    	loader.setController(this);
-    	Parent scene = loader.load();
-    	mainPane.setCenter(scene);
-    }
-
-    @FXML
-    void showDataBase(ActionEvent event) {
-
-    }
-
-    @FXML
-    void showQueues(ActionEvent event) {
-    }
     
     @FXML
     void attendGeneralQueue(ActionEvent event) {
-
+    	bank.attendUser(true);
     }
 
     @FXML
     void attendPrioriryQueue(ActionEvent event) {
-
+    	bank.attendUser(true);
     }
 
     @FXML
@@ -131,16 +154,16 @@ public class BankGUI {
     ///////////////////////////////////////////////////// Queue General & priority /////////////////////////////////////////////////
     
     @FXML
-    private TableView<?> tableGeneral;
+    private TableView<User> tableGeneral;
 
     @FXML
-    private TableColumn<?, ?> ColumnGeneral;
+    private TableColumn<User, String> ColumnGeneral;
 
     @FXML
-    private TableView<?> tablePriority;
+    private TableView<User> tablePriority;
 
     @FXML
-    private TableColumn<?, ?> columnPriority;
+    private TableColumn<User, String> columnPriority;
 
     @FXML
     private TextField txtCedulaCiudadania;
@@ -156,12 +179,15 @@ public class BankGUI {
 
     @FXML
     void addGeneralRow(ActionEvent event) {
-
+    	bank.registerIncome(txtNameAdd.getText(), txtCedulaCiudadania.getText(), null);
     }
 
     @FXML
-    void addPriorityRow(ActionEvent event) {
-
+    void addPriorityRow(ActionEvent event) throws IOException {
+    	FXMLLoader loader = new FXMLLoader(getClass().getResource("beacusePriority.fxml"));
+    	loader.setController(this);
+    	Parent scene = loader.load();
+    	mainPane.setCenter(scene);
     }
     
     ///////////////////////////////////////////////// Because Priority /////////////////////////////////////////////////
@@ -185,26 +211,34 @@ public class BankGUI {
     private RadioButton rbYounger;
 
     @FXML
-    void ready(ActionEvent event) {
-
+    void ready(ActionEvent event) throws IOException {
+    	Priority priority = new Priority(rbSeniorAdult.isSelected(), rbYounger.isSelected(), rbPregnancy.isSelected(), rbDisabled.isSelected());
+    	bank.registerIncome(txtNameAdd.getText(), txtCedulaCiudadania.getText(), priority);
+    	
+    	FXMLLoader loader = new FXMLLoader(getClass().getResource("queue.fxml"));
+    	loader.setController(this);
+    	Parent scene = loader.load();
+    	mainPane.setCenter(scene);
+    	initializeGeneralQueue();
+    	initializePriorityQueue();
     }
     
     ///////////////////////////////////////////////// clients sort /////////////////////////////////////////////////
     
     @FXML
-    private TableView<?> table;
+    private TableView<Client> table;
 
     @FXML
-    private TableColumn<?, ?> tableColumnName;
+    private TableColumn<Client, String> tableColumnName;
 
     @FXML
-    private TableColumn<?, ?> tableColumnCC;
+    private TableColumn<Client, String> tableColumnCC;
 
     @FXML
-    private TableColumn<?, ?> tableColumnTime;
+    private TableColumn<Client, LocalDate> tableColumnTime;
 
     @FXML
-    private TableColumn<?, ?> tableColumnBalance;
+    private TableColumn<Client, Double> tableColumnBalance;
 
     @FXML
     private RadioButton rbClientName;
@@ -227,6 +261,28 @@ public class BankGUI {
     @FXML
     void readySort(ActionEvent event) {
 
+    }
+    
+    ////////////////////////////////////////////////// Initializers /////////////////////////////
+    private void initializeTable() {
+    	ObservableList<Client> clients = FXCollections.observableArrayList(bank.getOrderedClientsToShow());
+    	table.setItems(clients);
+    	tableColumnName.setCellValueFactory(new PropertyValueFactory<Client,String>("name"));
+    	tableColumnCC.setCellValueFactory(new PropertyValueFactory<Client,String>("CC"));
+    	tableColumnTime.setCellValueFactory(new PropertyValueFactory<Client,LocalDate>("incorporationDate"));
+    	tableColumnBalance.setCellValueFactory(new PropertyValueFactory<Client,Double>("balance"));
+    }
+    
+    private void initializeGeneralQueue() {
+    	ObservableList<User> users = FXCollections.observableArrayList(bank.getGeneral());
+    	tableGeneral.setItems(users);
+    	ColumnGeneral.setCellValueFactory(new PropertyValueFactory<User,String>("name"));
+    }
+    
+    private void initializePriorityQueue() {
+    	ObservableList<User> users = FXCollections.observableArrayList(bank.getPriority());
+    	tableGeneral.setItems(users);
+    	ColumnGeneral.setCellValueFactory(new PropertyValueFactory<User,String>("name"));
     }
     
 }

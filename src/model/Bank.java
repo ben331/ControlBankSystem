@@ -35,7 +35,7 @@ public class Bank {
 	private HashTable<String, Client> clients;
 	private HashTable<String, Client> deserters;
 	private Stack<Operation> record;
-	private ArrayList<Tuple<? extends Comparable<?>, ?>> orderedClientsToShow;
+	private ArrayList<Client> orderedClientsToShow;
 	
 	public Bank() {
 		orderCriterion = Bank.SORT_BY_NAME_CC;
@@ -198,11 +198,19 @@ public class Bank {
 		return searchedClient;
 	}
 
-	public ArrayList<Tuple<? extends Comparable<?>, ?>> getOrderedClientsToShow() {
+	public ArrayList<Client> getOrderedClientsToShow() {
 		return orderedClientsToShow;
 	}
 	
+	public ArrayList<User> getGeneral() {
+		return generalQueue.toArrayList();
+	}
+	
+	public ArrayList<User> getPriority() {
+		return priorityQueue.toArrayList();
+	}
+	
 	public void refreshList() {
-		orderedClientsToShow = clients.toList();
+		orderedClientsToShow = (ArrayList<Client>) clients.toList();
 	}
 }

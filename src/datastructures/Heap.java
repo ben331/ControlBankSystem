@@ -1,5 +1,7 @@
 package datastructures;
 
+import java.util.ArrayList;
+
 public class Heap<K extends Comparable<K>, V> implements IHeap<K,V>{
 	
 	private Tuple<? extends Comparable<?>,?>[] array;
@@ -91,5 +93,14 @@ public class Heap<K extends Comparable<K>, V> implements IHeap<K,V>{
 			heapify(0);
 			return max;
 		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public ArrayList<V> toArrayList(){
+		ArrayList<V> list = new ArrayList<>();
+		for(int i=0; i<size; i++) {
+			list.add((V) array[i].getValue());
+		}
+		return list;
 	}
 }

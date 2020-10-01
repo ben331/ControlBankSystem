@@ -1,5 +1,7 @@
 package datastructures;
 
+import java.util.ArrayList;
+
 public class Queue<T> implements IQueue<T>{
 	
 	private int size;
@@ -51,5 +53,15 @@ public class Queue<T> implements IQueue<T>{
 
 	public int getSize() {
 		return size;
+	}
+	
+	public ArrayList<T> toArrayList(){
+		ArrayList<T> list = new ArrayList<>();
+		NodeQueue<T> current= first;
+		for(int i=0; i<size; i++) {
+			list.add(current.getElement());
+			current = current.getBack();
+		}
+		return list;
 	}
 }

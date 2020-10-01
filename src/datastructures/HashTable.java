@@ -127,14 +127,14 @@ public class HashTable<K extends Comparable<K>,V> implements IHashTable<K,V>, Se
 	}
 	
 	@SuppressWarnings( "unchecked" )
-	public ArrayList<Tuple<? extends Comparable<?>,?>> toList(){
-		ArrayList<Tuple<? extends Comparable<?>, ?>> list = new ArrayList<>();
+	public ArrayList<V> toList(){
+		ArrayList<V> list = new ArrayList<>();
 		Tuple<K,V> current;
 
 		for(int i = 0; i<m; i++) {
 			current = (Tuple<K, V>) table[i];
 			if(current !=null && current.getKey()!=null) {
-				list.add(current);
+				list.add(current.getValue());
 			}
 		}
 		return list;
