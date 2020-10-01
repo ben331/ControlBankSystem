@@ -344,7 +344,20 @@ public class BankGUI {
 
     @FXML
     void readySort(ActionEvent event) {
-
+    	
+    	if(rbClientName.isSelected()) {
+    		bank.setOrderCriterion(Bank.SORT_BY_NAME);
+    	}else if(rbCC.isSelected()){
+    		bank.setOrderCriterion(Bank.SORT_BY_CC);
+    	}else if(rbTime.isSelected()) {
+    		bank.setOrderCriterion(Bank.SORT_BY_DATE);
+    	}else {
+    		bank.setOrderCriterion(Bank.SORT_BY_BALANCE);
+    	}
+    	
+    	bank.sortDataBase();
+    	bank.refreshList();
+    	initializeTable();
     }
     
     ////////////////////////////////////////////////// Initializers /////////////////////////////

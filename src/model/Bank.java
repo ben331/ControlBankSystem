@@ -8,16 +8,18 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 
+import comparatorClient.*;
 import customexception.FullStructureException;
 import customexception.InsufficientBalanceException;
 import datastructures.*;
 
 public class Bank {
 	
-	public static final char SORT_BY_NAME_CC = 'N';
-	public static final char SORT_BY_DATE_NAME = 'D';
-	public static final char SORT_BY_PAYMENTDATE = 'P';
+	public static final char SORT_BY_NAME = 'N';
+	public static final char SORT_BY_DATE = 'D';
+	public static final char SORT_BY_CC = 'C';
 	public static final char SORT_BY_BALANCE = 'B';
 	
 	public static final String FILE_NAME_CLIENTS = "data/clients.srl";
@@ -42,7 +44,7 @@ public class Bank {
 	private ArrayList<Client> orderedClientsToShow;
 	
 	public Bank() {
-		orderCriterion = Bank.SORT_BY_NAME_CC;
+		orderCriterion = Bank.SORT_BY_NAME;
 		generalQueue = new Queue<>();
 		priorityQueue = new Heap<>(20);
 		clients = new HashTable<>(1009);
@@ -110,31 +112,99 @@ public class Bank {
 		record.push(o);
 	}
 	
-	private void sortByDateAndName() {
+private void sortByName() {
+		
+		refreshList();
+		if(orderedClientsToShow != null) {
+			mergeSort(orderedClientsToShow);
+		}
+		
+	}
+
+	public ArrayList<Client> mergeSort(ArrayList<Client> list){
+		ArrayList<Client> left = new ArrayList<Client>();
+		ArrayList<Client> right = new ArrayList<Client>();
+		
+		int medium;
+		
+		if(list.size() == 1) {
+			return list;
+		}else {
+			medium = list.size()/2;
+			for(int i = 0 ; i < medium; i++) {
+				left.add(list.get(i));
+			}
+			
+			for(int i = medium; i<list.size(); i++) {
+				right.add(list.get(i));
+			}
+			left = mergeSort(left);
+			right = mergeSort(right);
+			
+			stir(left, right, list);
+		}
+		
+		return list;
+	}
+	
+	private void stir(ArrayList<Client> left, ArrayList<Client> right, ArrayList<Client> list) {
+		
+		int leftIndex=0;
+		int rightIndex = 0;
+		int listIndex = 0;
+		
+		while(leftIndex < left.size() && rightIndex < right.size()) {
+			if(new NameComparator().compare(left.get(leftIndex), right.get(rightIndex)) < 0) {
+				list.set(listIndex, left.get(leftIndex));
+				leftIndex++;
+			}else {
+				list.set(listIndex, right.get(rightIndex));
+				rightIndex++;
+			}
+			listIndex++;
+		}
+		
+		ArrayList<Client> temp;
+		int tempIndex = 0;
+		if(tempIndex >= left.size()) {
+			temp = right;
+			tempIndex = rightIndex;
+		}else {
+			temp = left;
+			tempIndex = leftIndex;
+		}
+		
+		for (int i = tempIndex; i < temp.size(); i++) {
+			list.set(listIndex, temp.get(i));
+			listIndex++;
+		}
 		
 	}
 	
-	private void sortByNameAndCC() {
-		
+	private void sortByCC() {
+		refreshList();
+		Collections.sort(orderedClientsToShow, new CCComparator());
 	}
 	
 	private void sortByBalance() {
-		
+		refreshList();
+		Collections.sort(orderedClientsToShow, new MoneyComparator());
 	}
 	
-	private void sortByLastPaymentCreditC() {
-		
+	private void sortByDate() {
+		refreshList();
+		Collections.sort(orderedClientsToShow, new TimeComparator());
 	}
 	
 	public void sortDataBase() {
 		if(orderCriterion==Bank.SORT_BY_BALANCE) {
 			sortByBalance();
-		}else if(orderCriterion==Bank.SORT_BY_DATE_NAME) {
-			sortByDateAndName();
-		}else if(orderCriterion==Bank.SORT_BY_PAYMENTDATE) {
-			sortByLastPaymentCreditC();
+		}else if(orderCriterion==Bank.SORT_BY_DATE) {
+			sortByDate();
+		}else if(orderCriterion==Bank.SORT_BY_CC) {
+			sortByCC();
 		}else {
-			sortByNameAndCC();
+			sortByName();
 		}
 	}
 	
