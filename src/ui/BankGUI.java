@@ -8,12 +8,15 @@ import model.User;
 import java.io.IOException;
 import java.time.LocalDate;
 
+import customexception.FullStructureException;
+import customexception.InsufficientBalanceException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
@@ -21,12 +24,13 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 
 public class BankGUI {
 	
-	@SuppressWarnings("unused")
 	private Bank bank;
 
 	public BankGUI(Bank bank) {
@@ -72,10 +76,15 @@ public class BankGUI {
 	
 	///////////////////////////////////////////////////// Cashier /////////////////////////////////////////////////
 
-	
+    @FXML
+    private HBox HBoxOperations;
+    
     @FXML
     private TextField txtCCToSearch;
 
+    @FXML
+    private Button btRegister;
+    
     @FXML
     private TextField txtName;
 
@@ -109,46 +118,118 @@ public class BankGUI {
     @FXML
     void attendGeneralQueue(ActionEvent event) {
     	bank.attendUser(true);
+    	refreshPersonalData();
     }
 
     @FXML
     void attendPrioriryQueue(ActionEvent event) {
-    	bank.attendUser(true);
+    	bank.attendUser(false);
+    	refreshPersonalData();
     }
 
     @FXML
     void cancelAccount(ActionEvent event) {
-
+    	try {
+			bank.cancelAccountOfClient();
+		} catch (FullStructureException e) {
+			Alert alert = new Alert(AlertType.WARNING);
+    		alert.setTitle("Warning");
+    		alert.setContentText(e.getMessage());
+    		alert.showAndWait();
+		}
     }
 
     @FXML
     void consign(ActionEvent event) {
-
+    	try {
+    		bank.consingn(Double.parseDouble(txtValue.getText()));
+    		refreshPersonalData();
+    	}catch(Exception e) {
+    		Alert alert = new Alert(AlertType.WARNING);
+    		alert.setTitle("Warning");
+    		alert.setContentText(e.getMessage());
+    		alert.showAndWait();
+    	}
     }
 
     @FXML
     void payCreditCard(ActionEvent event) {
-
+    	try {
+			bank.payCreditCard(byCash.isSelected());
+			refreshPersonalData();
+		} catch (InsufficientBalanceException e) {
+			Alert alert = new Alert(AlertType.WARNING);
+    		alert.setTitle("Warning");
+    		alert.setContentText(e.getMessage());
+    		alert.showAndWait();
+		}
     }
 
     @FXML
     void searchClient(ActionEvent event) {
-
+    	bank.searchClient(txtCCToSearch.getText());
+    	Client client = (Client) bank.getSearchedClient();
+		
+    	if(client!=null) {
+    		txtName.setText(client.getName());
+        	txtCC.setText(client.getCC());
+    		labClientDate.setText((client).getIncorporationDate().toString());
+    		txtAccount.setText((client).getBalance()+"");
+    		txtCreditCard.setText((client).getCreditCard().getValue()+"");
+    		labPaymentDate.setText((client).getCreditCard().getLastPaymentDate().toString());
+    		btCurrent.setDisable(false);
+    		btRegister.setDisable(true);
+    		HBoxOperations.setDisable(true);
+    	}else {
+    		Alert alert = new Alert(AlertType.WARNING);
+    		alert.setTitle("Warning");
+    		alert.setContentText("Client Not Found");
+    		alert.showAndWait();
+    	}
+		
+    }
+    
+    @FXML
+    void registerNewClient(ActionEvent event) {
+    	try {
+			bank.registerClient();
+			btRegister.setDisable(true);
+		} catch (FullStructureException e) {
+			Alert alert = new Alert(AlertType.WARNING);
+    		alert.setTitle("Warning");
+    		alert.setContentText(e.getMessage());
+    		alert.showAndWait();
+		}
     }
 
     @FXML
     void showCurrentUser(ActionEvent event) {
-
+    	refreshPersonalData();
+    	btCurrent.setDisable(true);
     }
 
     @FXML
     void undo(ActionEvent event) {
-
+    	try {
+			bank.undo();
+		} catch (FullStructureException | InsufficientBalanceException e) {
+			Alert alert = new Alert(AlertType.WARNING);
+    		alert.setTitle("Warning");
+    		alert.setContentText(e.getMessage());
+    		alert.showAndWait();
+		}
     }
 
     @FXML
     void withDraw(ActionEvent event) {
-
+    	try {
+			bank.withDraw(Double.parseDouble(txtValue.getText()));
+		} catch (NumberFormatException | InsufficientBalanceException e) {
+			Alert alert = new Alert(AlertType.WARNING);
+    		alert.setTitle("Warning");
+    		alert.setContentText(e.getMessage());
+    		alert.showAndWait();
+		}
     }
     
     ///////////////////////////////////////////////////// Queue General & priority /////////////////////////////////////////////////
@@ -226,6 +307,9 @@ public class BankGUI {
     ///////////////////////////////////////////////// clients sort /////////////////////////////////////////////////
     
     @FXML
+    private Button btCurrent;
+    
+    @FXML
     private TableView<Client> table;
 
     @FXML
@@ -285,4 +369,27 @@ public class BankGUI {
     	ColumnGeneral.setCellValueFactory(new PropertyValueFactory<User,String>("name"));
     }
     
+    public void refreshPersonalData() {
+    	User user = bank.getCurrentUser();
+    	txtName.setText(user.getName());
+    	txtCC.setText(user.getCC());
+    	
+    	if(user instanceof Client) {
+    		btRegister.setDisable(true);
+    		HBoxOperations.setDisable(false);
+    		user = (Client) user;
+    		
+    		labClientDate.setText(((Client) user).getIncorporationDate().toString());
+    		txtAccount.setText(((Client) user).getBalance()+"");
+    		txtCreditCard.setText(((Client) user).getCreditCard().getValue()+"");
+    		labPaymentDate.setText(((Client) user).getCreditCard().getLastPaymentDate().toString());
+    	}else {
+    		btRegister.setDisable(false);
+    		HBoxOperations.setDisable(true);
+    		labClientDate.setText("- - - - -");
+    		txtAccount.setText("- - - - -");
+    		txtCreditCard.setText("- - - - -");
+    		labPaymentDate.setText("- - - - -");
+    	}
+    }
 }

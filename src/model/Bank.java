@@ -28,6 +28,10 @@ public class Bank {
 	private User currentUser;
 	private User searchedClient;
 	
+	public User getCurrentUser() {
+		return currentUser;
+	}
+
 	private boolean currentUserActive;
 	
 	private Queue<User> generalQueue;
@@ -98,11 +102,11 @@ public class Bank {
 		record.push(o);
 	}
 	
-	public void cancelAccountOfClient(String CC) throws FullStructureException {		
-		Client deserter = clients.get(CC);
-		deserters.put(CC, deserter);
-		clients.delete(CC);
-		Operation o = new Operation(Operation.CANCEL, CC);
+	public void cancelAccountOfClient() throws FullStructureException {		
+		Client deserter =(Client) currentUser;
+		deserters.put(deserter.getCC(), deserter);
+		clients.delete(deserter.getCC());
+		Operation o = new Operation(Operation.CANCEL, deserter.getCC());
 		record.push(o);
 	}
 	
