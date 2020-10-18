@@ -24,6 +24,7 @@ public class Bank {
 	
 	public static final String FILE_NAME_CLIENTS = "data/clients.srl";
 	public static final String FILE_NAME_DESERTERS = "data/deserters.srl";
+	private static final String FILE_RECORD = "data/record.srl";
 	
 	private char orderCriterion;
 	
@@ -62,23 +63,25 @@ public class Bank {
 	}
 	
 	public void attendUser(boolean attendGeneral) {
-		User user=null;
 		if(attendGeneral) {
 			if(!generalQueue.isEmpty()) {
-				user = generalQueue.dequeue();
+				currentUser = generalQueue.dequeue();
 			}
 		}else {
 			if(!priorityQueue.isEmpty()) {
-				user = priorityQueue.extractMax();
+				currentUser= priorityQueue.extractMax();
 			}
 		}
-		Client client = clients.get(user.getCC());
-		user = client!=null? client: user;
+		if(currentUser!=null) {
+			Client client = clients.get(currentUser.getCC());
+			currentUser = client!=null? client: currentUser;
+		}
 	}
 	
 	public void registerClient() throws FullStructureException {
 		Client client = new Client(currentUser.getName(), currentUser.getCC());
 		clients.put(currentUser.getCC(), client);
+		currentUser=null;
 	}
 	
 	public void searchClient(String CC) {
@@ -100,7 +103,7 @@ public class Bank {
 	public void payCreditCard(boolean inCash) throws InsufficientBalanceException {
 		LocalDate p = ((Client)currentUser).getCreditCard().getLastPaymentDate();
 		((Client)currentUser).payCreditCard(inCash);;
-		Operation o = new Operation(Operation.PAY_CREDIT_CARD, currentUser.getCC(), inCash, p);
+		Operation o = new Operation(Operation.PAY_CREDIT_CARD, currentUser.getCC(), inCash, p, ((Client) currentUser).getCreditCard().getValue());
 		record.push(o);
 	}
 	
@@ -110,6 +113,7 @@ public class Bank {
 		clients.delete(deserter.getCC());
 		Operation o = new Operation(Operation.CANCEL, deserter.getCC());
 		record.push(o);
+		currentUser=null;
 	}
 	
 private void sortByName() {
@@ -210,33 +214,38 @@ private void sortByName() {
 	
 	public void undo() throws FullStructureException, InsufficientBalanceException {
 		Operation o = record.pop();
-		if(o.getType()==Operation.CANCEL) {
-			Client client = deserters.get(o.getCC());
-			clients.put(o.getCC(), client);
-			deserters.delete(o.getCC());
-		}else if(o.getType()==Operation.CONSING) {
-			Client client = clients.get(o.getCC());
-			client.getAccount().withDraw(o.getValue());
-		}else if(o.getType()==Operation.PAY_CREDIT_CARD) {
-			Client client = clients.get(o.getCC());
-			client.getCreditCard().setValue(o.getValue());
-			client.getCreditCard().setLastPaymentDate(o.getPaymentCreditCard());
-			if(!o.byCash()) {
+		if(o!=null) {
+			if(o.getType()==Operation.CANCEL) {
+				Client client = deserters.get(o.getCC());
+				clients.put(o.getCC(), client);
+				deserters.delete(o.getCC());
+			}else if(o.getType()==Operation.CONSING) {
+				Client client = clients.get(o.getCC());
+				client.getAccount().withDraw(o.getValue());
+			}else if(o.getType()==Operation.PAY_CREDIT_CARD) {
+				Client client = clients.get(o.getCC());
+				client.getCreditCard().setValue(o.getValue());
+				client.getCreditCard().setLastPaymentDate(o.getPaymentCreditCard());
+				if(!o.byCash()) {
+					client.getAccount().consing(o.getValue());
+				}
+			}else {
+				Client client = clients.get(o.getCC());
 				client.getAccount().consing(o.getValue());
 			}
-		}else {
-			Client client = clients.get(o.getCC());
-			client.getAccount().consing(o.getValue());
 		}
 	}
 	
 	public void saveData() throws IOException {
 		ObjectOutputStream oos1 = new ObjectOutputStream(new FileOutputStream(FILE_NAME_CLIENTS));
 		ObjectOutputStream oos2 = new ObjectOutputStream(new FileOutputStream(FILE_NAME_DESERTERS));
+		ObjectOutputStream oos3 = new ObjectOutputStream(new FileOutputStream(FILE_RECORD));
     	oos1.writeObject(clients);
     	oos2.writeObject(deserters);
+    	oos3.writeObject(record);
     	oos1.close();
     	oos2.close();
+    	oos3.close();
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -247,8 +256,12 @@ private void sortByName() {
 			ois.close();
 			
 			ObjectInputStream ois2 = new ObjectInputStream(new FileInputStream(FILE_NAME_DESERTERS));
-			clients = (HashTable<String, Client>)(ois2.readObject());
+			deserters = (HashTable<String, Client>)(ois2.readObject());
 			ois2.close();
+			
+			ObjectInputStream ois3 = new ObjectInputStream(new FileInputStream(FILE_RECORD));
+			record = (Stack<Operation>)(ois3.readObject());
+			ois3.close();
 		} catch (FileNotFoundException e) {}
 	}
 

@@ -1,11 +1,16 @@
 package model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 import customexception.InsufficientBalanceException;
 
-public class Client extends User{
+public class Client extends User implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4818633155885007350L;
 	private LocalDate incorporationDate;
 	private CreditCard creditCard;
 	private SavingsAccount account;

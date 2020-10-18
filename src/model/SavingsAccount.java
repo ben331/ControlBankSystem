@@ -1,9 +1,15 @@
 package model;
 
+import java.io.Serializable;
+
 import customexception.InsufficientBalanceException;
 
-public class SavingsAccount {
+public class SavingsAccount implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1133289246378335271L;
 	private double balance;
 	
 	public SavingsAccount() {}

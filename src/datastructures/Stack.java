@@ -33,7 +33,9 @@ public class Stack<T> implements IStack<T>, Serializable {
 	}
 	
 	public T pop() {
-
+		if(top==null) {
+			return null;
+		}
 		T temp = top.getElement();
 		top = top.getElemDown();
 		return temp;

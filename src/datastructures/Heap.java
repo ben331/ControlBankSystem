@@ -55,10 +55,11 @@ public class Heap<K extends Comparable<K>, V> implements IHeap<K,V>{
 		if(size>0) {
 			Tuple<K,V> aux;
 			int indexFather =(int) Math.floor(i/2);
+			array[i]=element;
 			K keyFather = (K) array[indexFather].getKey();
 			K keyCurrent = (K) array[i].getKey();
 			
-			while(i>1 && keyFather.compareTo(keyCurrent)<0) {
+			while(i>0 && keyFather.compareTo(keyCurrent)>0) {
 				aux = (Tuple<K, V>) array[indexFather];  //Exchange
 				array[indexFather]=array[i];
 				array[i]=aux;
@@ -68,14 +69,16 @@ public class Heap<K extends Comparable<K>, V> implements IHeap<K,V>{
 				keyFather = (K) array[indexFather].getKey();
 				keyCurrent = (K) array[i].getKey();
 			}
+		}else {
+			array[0]=element;
 		}
 	}
 
 	@Override
 	public void insert(K key, V value) throws IndexOutOfBoundsException{
-		if(array.length!=size) {
-			size++;
+		if(array.length>size) {
 			increaseKey(size, new Tuple<K,V>(key, value));
+			size++;
 		}else {
 			throw new IndexOutOfBoundsException("Heap is full");
 		}

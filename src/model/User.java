@@ -1,6 +1,12 @@
 package model;
 
-public class User implements Comparable<User>{
+import java.io.Serializable;
+
+public class User implements Comparable<User>, Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5259967161956795943L;
 	private String name;
 	private String CC;
 	private Priority priority;

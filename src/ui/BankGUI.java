@@ -53,6 +53,7 @@ public class BankGUI {
     	loader.setController(this);
     	Parent scene = loader.load();
     	mainPane.setCenter(scene);
+    	refreshPersonalData();
     }
 
     @FXML
@@ -61,6 +62,7 @@ public class BankGUI {
     	loader.setController(this);
     	Parent scene = loader.load();
     	mainPane.setCenter(scene);
+    	bank.refreshList();
     	initializeTable();
     }
 
@@ -74,6 +76,10 @@ public class BankGUI {
     	initializePriorityQueue();
     }
 	
+    @FXML
+    void saveData(ActionEvent event) throws IOException {
+    	bank.saveData();
+    }
 	///////////////////////////////////////////////////// Cashier /////////////////////////////////////////////////
 
     @FXML
@@ -131,6 +137,7 @@ public class BankGUI {
     void cancelAccount(ActionEvent event) {
     	try {
 			bank.cancelAccountOfClient();
+			refreshPersonalData();
 		} catch (FullStructureException e) {
 			Alert alert = new Alert(AlertType.WARNING);
     		alert.setTitle("Warning");
@@ -200,6 +207,7 @@ public class BankGUI {
     		alert.setContentText(e.getMessage());
     		alert.showAndWait();
 		}
+    	refreshPersonalData();
     }
 
     @FXML
@@ -261,11 +269,14 @@ public class BankGUI {
     @FXML
     void addGeneralRow(ActionEvent event) {
     	bank.registerIncome(txtNameAdd.getText(), txtCedulaCiudadania.getText(), null);
+    	txtNameAdd.setText("");
+    	txtCedulaCiudadania.setText("");
+    	initializeGeneralQueue();
     }
 
     @FXML
     void addPriorityRow(ActionEvent event) throws IOException {
-    	FXMLLoader loader = new FXMLLoader(getClass().getResource("beacusePriority.fxml"));
+    	FXMLLoader loader = new FXMLLoader(getClass().getResource("becausePriority.fxml"));
     	loader.setController(this);
     	Parent scene = loader.load();
     	mainPane.setCenter(scene);
@@ -378,26 +389,40 @@ public class BankGUI {
     
     private void initializePriorityQueue() {
     	ObservableList<User> users = FXCollections.observableArrayList(bank.getPriority());
-    	tableGeneral.setItems(users);
-    	ColumnGeneral.setCellValueFactory(new PropertyValueFactory<User,String>("name"));
+    	tablePriority.setItems(users);
+    	columnPriority.setCellValueFactory(new PropertyValueFactory<User,String>("name"));
     }
     
     public void refreshPersonalData() {
     	User user = bank.getCurrentUser();
-    	txtName.setText(user.getName());
-    	txtCC.setText(user.getCC());
-    	
-    	if(user instanceof Client) {
-    		btRegister.setDisable(true);
-    		HBoxOperations.setDisable(false);
-    		user = (Client) user;
-    		
-    		labClientDate.setText(((Client) user).getIncorporationDate().toString());
-    		txtAccount.setText(((Client) user).getBalance()+"");
-    		txtCreditCard.setText(((Client) user).getCreditCard().getValue()+"");
-    		labPaymentDate.setText(((Client) user).getCreditCard().getLastPaymentDate().toString());
+    	if(user!=null) {
+    		txtName.setText(user.getName());
+        	txtCC.setText(user.getCC());
+        	
+        	if(user instanceof Client) {
+        		btRegister.setDisable(true);
+        		HBoxOperations.setDisable(false);
+        		user = (Client) user;
+        		
+        		labClientDate.setText(((Client) user).getIncorporationDate().toString());
+        		txtAccount.setText(((Client) user).getBalance()+"");
+        		txtCreditCard.setText(((Client) user).getCreditCard().getValue()+"");
+        		LocalDate d = ((Client) user).getCreditCard().getLastPaymentDate();
+        		if(d!=null) {
+        			labPaymentDate.setText(d.toString());
+        		}
+        	}else {
+        		btRegister.setDisable(false);
+        		HBoxOperations.setDisable(true);
+        		labClientDate.setText("- - - - -");
+        		txtAccount.setText("- - - - -");
+        		txtCreditCard.setText("- - - - -");
+        		labPaymentDate.setText("- - - - -");
+        	}
     	}else {
-    		btRegister.setDisable(false);
+    		txtName.setText("");
+        	txtCC.setText("");
+        	btRegister.setDisable(true);
     		HBoxOperations.setDisable(true);
     		labClientDate.setText("- - - - -");
     		txtAccount.setText("- - - - -");

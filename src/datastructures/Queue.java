@@ -31,7 +31,7 @@ public class Queue<T> implements IQueue<T>{
 		T element = null;
 		
 		if(!isEmpty()) {
-			element = last.getElement();
+			element = first.getElement();
 			if(last == first) {
 				last = first = null;
 			}

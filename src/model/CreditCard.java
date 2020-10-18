@@ -1,8 +1,13 @@
 package model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class CreditCard {
+public class CreditCard implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4698497029506554993L;
 	private double value;
 	private LocalDate lastPaymentDate;
 	
