@@ -183,7 +183,12 @@ public class BankGUI {
     		labClientDate.setText((client).getIncorporationDate().toString());
     		txtAccount.setText((client).getBalance()+"");
     		txtCreditCard.setText((client).getCreditCard().getValue()+"");
-    		labPaymentDate.setText((client).getCreditCard().getLastPaymentDate().toString());
+    		LocalDate p = (client).getCreditCard().getLastPaymentDate();
+    		if(p!=null) {
+    			labPaymentDate.setText(p.toString());
+    		}else {
+    			labPaymentDate.setText("----");
+    		}
     		btCurrent.setDisable(false);
     		btRegister.setDisable(true);
     		HBoxOperations.setDisable(true);
@@ -220,6 +225,7 @@ public class BankGUI {
     void undo(ActionEvent event) {
     	try {
 			bank.undo();
+			refreshPersonalData();
 		} catch (FullStructureException | InsufficientBalanceException e) {
 			Alert alert = new Alert(AlertType.WARNING);
     		alert.setTitle("Warning");
@@ -232,6 +238,7 @@ public class BankGUI {
     void withDraw(ActionEvent event) {
     	try {
 			bank.withDraw(Double.parseDouble(txtValue.getText()));
+			refreshPersonalData();
 		} catch (NumberFormatException | InsufficientBalanceException e) {
 			Alert alert = new Alert(AlertType.WARNING);
     		alert.setTitle("Warning");

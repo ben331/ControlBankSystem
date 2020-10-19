@@ -102,9 +102,9 @@ public class Bank {
 	
 	public void payCreditCard(boolean inCash) throws InsufficientBalanceException {
 		LocalDate p = ((Client)currentUser).getCreditCard().getLastPaymentDate();
-		((Client)currentUser).payCreditCard(inCash);;
 		Operation o = new Operation(Operation.PAY_CREDIT_CARD, currentUser.getCC(), inCash, p, ((Client) currentUser).getCreditCard().getValue());
 		record.push(o);
+		((Client)currentUser).payCreditCard(inCash);
 	}
 	
 	public void cancelAccountOfClient() throws FullStructureException {		
